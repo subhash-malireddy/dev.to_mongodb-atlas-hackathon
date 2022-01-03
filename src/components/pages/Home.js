@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
+import '../../styles/home.scss'
 import Button from 'react-bootstrap/Button'
 
 export default function Home() {
@@ -11,11 +12,6 @@ export default function Home() {
             justifyContent: "center",
             alignContent: "center",
             minHeight: `${windowHeight}px`
-        },
-        btn:{
-            height: "200px",
-            width: "200px",
-            borderRadius: "50%"
         }
     }
 
