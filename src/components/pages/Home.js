@@ -20,7 +20,6 @@ export default function Home() {
     }
 
     useEffect(() => {
-        console.log('Home component loaded')
         setWindowHeight(window.innerHeight)
         window.addEventListener('resize', () => {
             setWindowHeight(window.innerHeight)

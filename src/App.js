@@ -7,8 +7,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 //components
-import Home from './components/Home'
-import TaskList from './components/TaskList'
+import Home from './components/pages/Home'
+import TaskList from './components/pages/TaskList'
 
 function App() {
   const div2return = document.createElement('div')
