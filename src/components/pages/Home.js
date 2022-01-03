@@ -14,6 +14,10 @@ export default function Home() {
             minHeight: `${windowHeight}px`
         }
     }
+    const handleButtonClick = (e) => {
+        console.log(e)
+        console.log('button clicked')
+    }
 
     useEffect(() => {
         setWindowHeight(window.innerHeight)
@@ -28,7 +32,7 @@ export default function Home() {
 
     return (
         <section style={styles.homeSection}>
-            <Button style={styles.btn}>Create A New Task List!</Button>
+            <Button className="btn" onClick={handleButtonClick}>Create A New Task List!</Button>
         </section>
     )
 }
