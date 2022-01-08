@@ -2,9 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { Form } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
 
+import * as Realm from "realm-web";
+
 import '../../styles/home.scss'
 
 function Home() {
+
+    const app = new Realm.App({id: "simple-task-reminder-zwzct"})
+
     const [windowHeight, setWindowHeight] = useState(window.innerHeight)
     const [formType, setFormType] = useState('signin')
 
@@ -31,17 +36,27 @@ function Home() {
         }
     }
 
-    const handleSignupSignin = () =>{
+    const handleSignupSignin = async () =>{
         if(formType === 'signin'){
             console.log('signing in')
             console.log(`email: ${email}, password: ${password}`)
+            const credentials = Realm.Credentials.emailPassword(email, password)
+            try{
+                const user = await app.logIn(credentials);
+                console.log(user)
+            }catch(e){
+                alert(String(e))
+            }
         }else{
             console.log('signing up')
             console.log(`email: ${email}, password: ${password}`)
+            const userRegisterResult = await app.emailPasswordAuth.registerUser({ email, password });
+            console.log(userRegisterResult)
         }
     }
 
     useEffect(() => {
+        console.log(app)
         setWindowHeight(window.innerHeight)
         window.addEventListener('resize', () => {
             setWindowHeight(window.innerHeight)
