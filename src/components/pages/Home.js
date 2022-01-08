@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react'
-
-import '../../styles/home.scss'
+import { Form } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
 
-export default function Home() {
+import '../../styles/home.scss'
+
+function Home() {
     const [windowHeight, setWindowHeight] = useState(window.innerHeight)
+    const [formType, setFormType] = useState('signin')
+
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
 
     const styles = {
         homeSection: {
@@ -14,9 +20,25 @@ export default function Home() {
             minHeight: `${windowHeight}px`
         }
     }
-    const handleButtonClick = (e) => {
-        console.log(e)
-        console.log('button clicked')
+    const toggleFormType = (e) => {
+        if(formType === 'signin'){
+            setFormType('signup')
+            setEmail('')
+            setPassword('')
+    }
+        else{
+            setFormType('signin')    
+        }
+    }
+
+    const handleSignupSignin = () =>{
+        if(formType === 'signin'){
+            console.log('signing in')
+            console.log(`email: ${email}, password: ${password}`)
+        }else{
+            console.log('signing up')
+            console.log(`email: ${email}, password: ${password}`)
+        }
     }
 
     useEffect(() => {
@@ -31,8 +53,37 @@ export default function Home() {
     }, [])
 
     return (
-        <section style={styles.homeSection}>
-            <Button className="btn" onClick={handleButtonClick}>Create A New Task List!</Button>
-        </section>
+        <div style={styles.homeSection}>
+            <Form>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label>Email address</Form.Label>
+                    <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => {setEmail(e.target.value)}}/>
+                    <Form.Text className="text-muted">
+                        We'll never share your email with anyone else.
+                    </Form.Text>
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control type="password" placeholder="Password" value={password} onChange={(e) => {setPassword(e.target.value)}}/>
+                    {
+                        formType === 'signup' && 
+                        <Form.Text className="text-muted">
+                        Password should be atleast 8 characters long!
+                        </Form.Text>
+                    }
+                </Form.Group>
+                <Button variant="primary" onClick={handleSignupSignin}>
+                    {
+                        formType === 'signin' ? 'Sign In' : 'Sign Up'
+                    }
+                </Button>
+            </Form>
+            <strong className='sign-up-in-link'  onClick={toggleFormType}>
+                {formType === 'signin' ? 'Not a user click here to Sign-up!': 'Already a user? Click here to Sign-in.'}
+            </strong>
+        </div>
     )
 }
+
+export default Home

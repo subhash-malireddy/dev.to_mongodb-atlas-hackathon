@@ -3,7 +3,7 @@ $timing: 8s;
 $btn-height: 200px;
 $btn-width: 200px;
 
-.btn{
+.my-btn{
     height: $btn-height;
     width: $btn-width;
     border-radius: 50%;
@@ -14,9 +14,15 @@ $btn-width: 200px;
 }
 @keyframes breath {
     50%{
-        transform: scale(.9);
+        transform: scale(.6);
     }
     100%{
         transform: scale(1);
     }
+}
+
+.sign-up-in-link{
+    color: #5a59c6;
+    text-decoration: underline;
+    cursor: pointer;
 }
