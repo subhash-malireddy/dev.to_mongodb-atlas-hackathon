@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Form } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
+import { Link } from 'react-router-dom';
 
 import * as Realm from "realm-web";
 
@@ -97,6 +98,9 @@ function Home() {
             <strong className='sign-up-in-link'  onClick={toggleFormType}>
                 {formType === 'signin' ? 'Not a user click here to Sign-up!': 'Already a user? Click here to Sign-in.'}
             </strong>
+            {
+                formType === 'signin' && <Link to='/forgotPassword'>Forgot Password?</Link>
+            }
         </div>
     )
 }

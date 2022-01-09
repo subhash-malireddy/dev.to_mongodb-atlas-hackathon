@@ -12,6 +12,7 @@ import Home from './components/pages/Home'
 import TaskList from './components/pages/TaskList'
 import ConfirmEmail from "./components/pages/ConfirmEmail";
 import ResetPassword from "./components/pages/ResetPassword";
+import ForgotPassword from "./components/pages/ForgotPassword";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route exact path="/tasklist" element={<TaskList />} />
         <Route path="/confirmEmail" element={<ConfirmEmail />} />
         <Route exact path="/resetPassword" element={<ResetPassword />} />
+        <Route exact path="/forgotPassword" element={<ForgotPassword />} />
       </Routes>
     </Router>
   );
