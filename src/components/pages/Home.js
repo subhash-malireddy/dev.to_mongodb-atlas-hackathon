@@ -91,16 +91,6 @@ function Home() {
           }
       };
 
-      const disableButton =() =>{
-          if(emailValidation(email) && passwordValidation(password)){
-              return true;
-          }
-          else{
-              return false;
-          }
-      };
-
-
     useEffect(() => {
         console.log(app)
         setWindowHeight(window.innerHeight)
