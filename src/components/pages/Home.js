@@ -56,6 +56,51 @@ function Home() {
         }
     }
 
+    const emailValidation = email => {
+        if (
+            /\S+@\S+\.\S+/.test(
+            email,
+          )
+        ) {
+          console.log('valid email');
+          return true;
+        }
+        else if (email.trim() === '') {
+           console.log('Email is required');
+           return false;
+        }
+        else{
+            console.log('Please enter a valid email');
+            return false;
+        }
+        
+      };
+
+      const passwordValidation = password => {
+          if (password.length >= 8){
+              console.log('valid password')
+              return true;
+          }
+          else if (password.length === 0){
+              console.log('Password required');
+              return false;
+          }
+          else{
+              console.log('please enter a valid password');
+              return false;
+          }
+      };
+
+      const disableButton =() =>{
+          if(emailValidation(email) && passwordValidation(password)){
+              return true;
+          }
+          else{
+              return false;
+          }
+      };
+
+
     useEffect(() => {
         console.log(app)
         setWindowHeight(window.innerHeight)
@@ -73,7 +118,7 @@ function Home() {
             <Form>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => {setEmail(e.target.value)}}/>
+                    <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => {setEmail(e.target.value); emailValidation(e.target.value)}}/>
                     <Form.Text className="text-muted">
                         We'll never share your email with anyone else.
                     </Form.Text>
@@ -81,7 +126,7 @@ function Home() {
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" value={password} onChange={(e) => {setPassword(e.target.value)}}/>
+                    <Form.Control type="password" placeholder="Password" value={password} onChange={(e) => {setPassword(e.target.value); passwordValidation(e.target.value)}}/>
                     {
                         formType === 'signup' && 
                         <Form.Text className="text-muted">
@@ -89,7 +134,7 @@ function Home() {
                         </Form.Text>
                     }
                 </Form.Group>
-                <Button variant="primary" onClick={handleSignupSignin}>
+                <Button variant="primary" onClick={handleSignupSignin} disabled={!emailValidation(email) || !passwordValidation(password)}>
                     {
                         formType === 'signin' ? 'Sign In' : 'Sign Up'
                     }
