@@ -3,6 +3,7 @@ import { Form } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
 import { Link, useNavigate } from 'react-router-dom';
 
+
 import * as Realm from "realm-web";
 
 import '../../styles/home.scss'
@@ -59,8 +60,39 @@ function Home() {
         }
     }
 
+    const emailValidation = () => {
+        if (
+            /\S+@\S+\.\S+/.test(
+            email,
+          )
+        ) {
+          return true;
+        }
+        else if (email.trim() === '') {
+           return false;
+        }
+        else{
+            return false;
+        }
+        
+      };
+
+      const passwordValidation = () => {
+          if (password.length >= 8){
+              return true;
+          }
+          else if (password.length === 0){
+              return false;
+          }
+          else{
+              return false;
+          }
+      };
+
+
     useEffect(() => {
         console.log(app)
+        // alert("please enter a valid email")
         setWindowHeight(window.innerHeight)
         window.addEventListener('resize', () => {
             setWindowHeight(window.innerHeight)
@@ -92,7 +124,7 @@ function Home() {
                         </Form.Text>
                     }
                 </Form.Group>
-                <Button variant="primary" onClick={handleSignupSignin}>
+                <Button variant="primary" onClick={handleSignupSignin} disabled={!emailValidation() || !passwordValidation()}>
                     {
                         formType === 'signin' ? 'Sign In' : 'Sign Up'
                     }
