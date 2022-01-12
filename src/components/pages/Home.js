@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Form } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 import * as Realm from "realm-web";
@@ -17,6 +17,8 @@ function Home() {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+
+    let navigate = useNavigate()
 
 
     const styles = {
@@ -46,6 +48,7 @@ function Home() {
             try{
                 const user = await app.logIn(credentials);
                 console.log(user)
+                navigate('/tasks')
             }catch(e){
                 alert(String(e))
             }
