@@ -6,6 +6,7 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import './styles/general.scss'
+import './styles/tasks.scss'
 
 //components
 import AppNav from "./components/AppNav";

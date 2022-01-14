@@ -14,9 +14,11 @@ function AppNav() {
         await app.currentUser.logOut()
         navigate('/')
     }
-    // useEffect(() => {
-    //     console.log(app.currentUser ? true : false)
-    // })
+    useEffect(() => {
+        if(app.currentUser){
+            navigate('/tasks')
+        }
+    },[])
     return (
         <div>
             <Navbar bg="dark" className="nav-brand">

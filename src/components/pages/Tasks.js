@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import TaskList from './TaskList';
+import TaskList from '../TaskList';
 import '../../styles/home.scss'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
@@ -24,20 +24,23 @@ export default function Tasks() {
 
     const tasksCollection = mongodb.db('simple-task-reminder').collection('tasks')
 
+    //tasks crud
     const createTask = async (e) => {
-        console.log('creating task')
         e.preventDefault()
         const fd = new FormData(createTaskForm.current)
         fd.append("user", app.currentUser.id)
-        let task = {}
+        fd.append("user_email", app.currentUser.profile.email)
+        let newTask = {}
         for (let key of fd.keys()) {
-            task[key] = fd.get(key)
+            newTask[key] = fd.get(key)
         }
-        console.log(task)
-        const fdJson = fd2json(fd)
+        newTask["date_created"] = new Date()
+        newTask["task_status"] = "incomplete"
+        console.log(newTask)
         try {
-            const insertResult = await tasksCollection.insertOne(task)
-            console.log(insertResult)
+            const insertResult = await tasksCollection.insertOne(newTask)
+            newTask["_id"] = insertResult.insertedId 
+            tasks.push(newTask)
             createTaskForm.current.reset()
             setShowModal(false)
         } catch (e) {
@@ -46,6 +49,54 @@ export default function Tasks() {
             alert(String(e))
             createTaskForm.current.reset()
             setShowModal(false)
+        }
+    }
+
+    const getAllTasks = async () => {
+        const allTasks = await tasksCollection.find({ task_status: "incomplete" })
+        setTasks(allTasks)
+    }
+
+    const completeTask = async (_id) => {
+        /* 
+        you can modify the local tasks array to reflect the changes and choose not to send another request to db. 
+        But for simplicity I'll call the getAllTasks to rereender the component with new set of tasks.
+        In this function I'll send an update request and once the task is updated, I'll send a get request to get a new set of updated tasks from db.
+         */
+        console.log("task_id: ", _id)
+        try {
+            const updateResult = await tasksCollection.updateOne(
+                { _id: _id },
+                { $set: { task_status: "complete" } }
+            )
+            if (updateResult.matchedCount === 1 && updateResult.modifiedCount === 1) {
+                alert("Yay! Keep up the good Work, you completed your task.")
+            } else {
+                alert("There's a problem updating the task, please try again. Make sure you are logged in!")
+            }
+            getAllTasks()
+        } catch (e) {
+            alert(String(e))
+        }
+    }
+    const deleteTask = async (_id) => {
+        /* 
+       you can modify the local tasks array to reflect the changes and choose not to send another request to db. But for simplicity I'll call the getAllTasks to rereender the component with new set of tasks.
+       In this function I'll send an delete request and once the task is deleted, I'll send a get request to get a new set of updated tasks from db.
+        */
+        alert("Are you sure you want to delete this task?")
+        try {
+            const deleteResult = await tasksCollection.deleteOne(
+                { _id: _id }
+            )
+            if (deleteResult.deletedCount === 1) {
+                alert("Task deleted Successfully")
+            } else {
+                alert("There's a problem deleting the task, please try again. Make sure you are logged in!")
+            }
+            getAllTasks()
+        } catch (e) {
+            alert(e)
         }
     }
 
@@ -91,13 +142,11 @@ export default function Tasks() {
     }
 
     useEffect(() => {
-        console.log(app.currentUser)
-        console.log('modal show: ', showModal)
+        getAllTasks()
         setWindowHeight(window.innerHeight)
         window.addEventListener('resize', () => {
             setWindowHeight(window.innerHeight)
         })
-
         return () => {
             window.removeEventListener('resize', setWindowHeight)
         }
@@ -112,7 +161,7 @@ export default function Tasks() {
                 <Button variant="success" onClick={handleShow}>Create A New Task</Button>
             </div>
             <div style={styles.homeSection}>
-                {!tasks ? <TaskList /> : "There are no tasks to display. Why not create one 😎."}
+                {tasks.length !== 0 ? <TaskList tasks={tasks} deleteTask={deleteTask} completeTask={completeTask} /> : "There are no tasks to display. Why not create one 😎."}
             </div>
             {
                 showModal && createTaskModal()

@@ -91,8 +91,6 @@ function Home() {
 
 
     useEffect(() => {
-        console.log(app)
-        // alert("please enter a valid email")
         setWindowHeight(window.innerHeight)
         window.addEventListener('resize', () => {
             setWindowHeight(window.innerHeight)

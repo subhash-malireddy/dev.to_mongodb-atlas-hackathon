@@ -1,0 +1,9 @@
+.task{
+    margin: 1rem;
+    text-align: center;
+    .task-card-footer{
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+    }
+}
