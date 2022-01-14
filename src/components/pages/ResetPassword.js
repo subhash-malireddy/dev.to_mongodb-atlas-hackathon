@@ -7,7 +7,7 @@ import '../../styles/general.scss'
 import * as Realm from "realm-web";
 
 function ResetPassword() {
-    const app = new Realm.App({ id: "simple-task-reminder-zwzct" })
+    const app = new Realm.App({ id: process.env.REACT_APP_REALM_APP_ID })
     const [password, setpassword] = useState('')
     let [searchParams, setSearchParams] = useSearchParams()
     let navigate = useNavigate()

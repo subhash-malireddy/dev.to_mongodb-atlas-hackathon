@@ -8,7 +8,7 @@ import * as Realm from "realm-web";
 import '../styles/general.scss'
 
 function AppNav() {
-    const app = new Realm.App({ id: "simple-task-reminder-zwzct" })
+    const app = new Realm.App({ id: process.env.REACT_APP_REALM_APP_ID })
     let navigate = useNavigate()
     const logout = async () => {
         await app.currentUser.logOut()

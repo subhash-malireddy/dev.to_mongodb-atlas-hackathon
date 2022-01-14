@@ -9,7 +9,7 @@ import * as Realm from "realm-web";
 
 function ForgotPassword() {
     const [email, setEmail] = useState('')
-    const app = new Realm.App({ id: "simple-task-reminder-zwzct" })
+    const app = new Realm.App({ id: process.env.REACT_APP_REALM_APP_ID })
     let navigate = useNavigate()
 
     const sendEmail2Realm = async () => {

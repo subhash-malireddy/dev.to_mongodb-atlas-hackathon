@@ -4,7 +4,7 @@ import * as Realm from "realm-web";
 
 function ConfirmEmail() {
 
-    const app = new Realm.App({ id: "simple-task-reminder-zwzct" })
+    const app = new Realm.App({ id: process.env.REACT_APP_REALM_APP_ID })
     const [userConfiramtionStatus, setUserConfirmationStatus] = useState(false)
     let [searchParams, setSearchParams] = useSearchParams()
     let navigate = useNavigate()

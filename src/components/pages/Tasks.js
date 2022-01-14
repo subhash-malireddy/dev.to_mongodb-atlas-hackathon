@@ -5,7 +5,6 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 
-import fd2json from '../../utils/fd2json';
 
 import * as Realm from "realm-web";
 
@@ -19,7 +18,7 @@ export default function Tasks() {
     const handleShow = () => { console.log('setting modal show'); setShowModal(true) };
 
 
-    const app = new Realm.App({ id: "simple-task-reminder-zwzct" })
+    const app = new Realm.App({ id: process.env.REACT_APP_REALM_APP_ID })
     const mongodb = app.currentUser.mongoClient('mongodb-atlas')
 
     const tasksCollection = mongodb.db('simple-task-reminder').collection('tasks')

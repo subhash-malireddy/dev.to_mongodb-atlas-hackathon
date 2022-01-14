@@ -10,7 +10,7 @@ import '../../styles/home.scss'
 
 function Home() {
 
-    const app = new Realm.App({id: "simple-task-reminder-zwzct"})
+    const app = new Realm.App({id: process.env.REACT_APP_REALM_APP_ID})
 
     const [windowHeight, setWindowHeight] = useState(window.innerHeight)
     const [formType, setFormType] = useState('signin')
