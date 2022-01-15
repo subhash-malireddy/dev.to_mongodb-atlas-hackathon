@@ -1,28 +1,12 @@
-$color: #000;
-$timing: 8s;
-$btn-height: 200px;
-$btn-width: 200px;
-
-.my-btn{
-    height: $btn-height;
-    width: $btn-width;
-    border-radius: 50%;
-    font-weight: bold;
-    text-transform: capitalize;
-    animation: breath $timing infinite forwards;
-    box-shadow: -1px 0px 10px $color;
-}
-@keyframes breath {
-    50%{
-        transform: scale(.6);
-    }
-    100%{
-        transform: scale(1);
-    }
-}
-
 .sign-up-in-link{
     color: #5a59c6;
     text-decoration: underline;
     cursor: pointer;
+}
+
+.form-valiation-msg{
+    color: red;
+    font-style: italic;
+    font-size: smaller;
+    display: block;
 }

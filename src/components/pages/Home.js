@@ -16,6 +16,8 @@ function Home() {
     const [formType, setFormType] = useState('signin')
 
     const [email, setEmail] = useState('')
+    const [emailTouched, setEmailTouched] = useState(false)
+    const [passwordTouched, setPasswordTouched] = useState(false)
     const [password, setPassword] = useState('')
 
     let navigate = useNavigate()
@@ -61,11 +63,7 @@ function Home() {
     }
 
     const emailValidation = () => {
-        if (
-            /\S+@\S+\.\S+/.test(
-            email,
-          )
-        ) {
+        if (/\S+@\S+\.\S+/.test(email)) {
           return true;
         }
         else if (email.trim() === '') {
@@ -91,6 +89,7 @@ function Home() {
 
 
     useEffect(() => {
+
         setWindowHeight(window.innerHeight)
         window.addEventListener('resize', () => {
             setWindowHeight(window.innerHeight)
@@ -106,7 +105,8 @@ function Home() {
             <Form>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => {setEmail(e.target.value)}}/>
+                    <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => {setEmail(e.target.value);}} onClick={() => {setEmailTouched(true)}}/>
+                    {emailTouched && email === "" && <span className="form-valiation-msg">**Please enter a valid email address**</span>}
                     <Form.Text className="text-muted">
                         We'll never share your email with anyone else.
                     </Form.Text>
@@ -114,7 +114,8 @@ function Home() {
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" value={password} onChange={(e) => {setPassword(e.target.value)}}/>
+                    <Form.Control type="password" placeholder="Password" value={password} onChange={(e) => {setPassword(e.target.value);}} onClick={() => {setPasswordTouched(true)}}/>
+                    {passwordTouched && password === "" && <span className="form-valiation-msg">**Make sure password is 8 characters long**</span>}
                     {
                         formType === 'signup' && 
                         <Form.Text className="text-muted">
