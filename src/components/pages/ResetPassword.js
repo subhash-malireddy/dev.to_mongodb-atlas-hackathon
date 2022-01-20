@@ -9,7 +9,7 @@ import * as Realm from "realm-web";
 function ResetPassword() {
     const app = new Realm.App({ id: process.env.REACT_APP_REALM_APP_ID })
     const [password, setpassword] = useState('')
-    let [searchParams, setSearchParams] = useSearchParams()
+    let [searchParams] = useSearchParams()
     let navigate = useNavigate()
     const token = searchParams.get('token')
     const tokenId = searchParams.get('tokenId')

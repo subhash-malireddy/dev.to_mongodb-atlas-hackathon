@@ -6,28 +6,29 @@ function ConfirmEmail() {
 
     const app = new Realm.App({ id: process.env.REACT_APP_REALM_APP_ID })
     const [userConfiramtionStatus, setUserConfirmationStatus] = useState(false)
-    let [searchParams, setSearchParams] = useSearchParams()
+    let [searchParams, ] = useSearchParams()
     let navigate = useNavigate()
     const token = searchParams.get('token')
     const tokenId = searchParams.get('tokenId')
 
-    const confirmUser = async () => {
-        try {
-            await app.emailPasswordAuth.confirmUser({ token, tokenId });
-            setUserConfirmationStatus(true)
-            alert("Your email address has been confirmed. Now you can get your remainder via email.")
-            navigate('/')
-        } catch (e) {
-            alert(
-                `There's some problem confirming your email address. Please try again later with the same link provided in your email. \n\n${String(e)}`
-            )
-        }
-
-    }
+    
 
     useEffect(() => {
-        confirmUser()
-    }, [])
+        async function confirmUserEmail () {
+            try {
+                await app.emailPasswordAuth.confirmUser({ token, tokenId });
+                setUserConfirmationStatus(true)
+                alert("Your email address has been confirmed. Now you can get your remainder via email.")
+                navigate('/')
+            } catch (e) {
+                alert(
+                    `There's some problem confirming your email address. Please try again later with the same link provided in your email. \n\n${String(e)}`
+                )
+            }
+    
+        }
+        confirmUserEmail()
+    }, [app.emailPasswordAuth, token, tokenId, navigate])
 
     return (
         <div style={{ textAlign: 'center' }}>

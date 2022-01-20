@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import TaskList from '../TaskList';
 import '../../styles/home.scss'
 import Button from 'react-bootstrap/Button'
@@ -11,12 +11,16 @@ import * as Realm from "realm-web";
 
 export default function Tasks() {
     const [windowHeight, setWindowHeight] = useState(window.innerHeight)
+
     const [tasks, setTasks] = useState([])
     const [showModal, setShowModal] = useState(false)
     const createTaskForm = useRef()
     const handleClose = () => setShowModal(false);
-    const handleShow = () => { console.log('setting modal show'); setShowModal(true) };
+    const handleShow = () => { setShowModal(true) };
 
+    let cancelGetTasks = useRef(false)
+
+    let getTasksCount = useRef(0)
 
     const app = new Realm.App({ id: process.env.REACT_APP_REALM_APP_ID })
     const mongodb = app.currentUser.mongoClient('mongodb-atlas')
@@ -35,7 +39,7 @@ export default function Tasks() {
         }
         newTask["date_created"] = new Date()
         newTask["task_status"] = "incomplete"
-        console.log(newTask)
+        // console.log(newTask)
         try {
             const insertResult = await tasksCollection.insertOne(newTask)
             newTask["_id"] = insertResult.insertedId 
@@ -44,16 +48,22 @@ export default function Tasks() {
             setShowModal(false)
         } catch (e) {
             console.warn(e)
-            console.log(e)
+            // console.log(e)
             alert(String(e))
             createTaskForm.current.reset()
             setShowModal(false)
         }
     }
 
-    const getAllTasks = async () => {
-        const allTasks = await tasksCollection.find({ task_status: "incomplete" })
-        setTasks(allTasks)
+    const getAllTasks = useCallback(async () => {
+        if(!cancelGetTasks.current){
+            getTasksCount.current++
+            setTasks(await tasksCollection.find({ task_status: "incomplete" }))
+        }
+    },[tasksCollection])
+
+    const handleSetWindowHeight = () => {
+        setWindowHeight(window.innerHeight)
     }
 
     const completeTask = async (_id) => {
@@ -62,7 +72,7 @@ export default function Tasks() {
         But for simplicity I'll call the getAllTasks to rereender the component with new set of tasks.
         In this function I'll send an update request and once the task is updated, I'll send a get request to get a new set of updated tasks from db.
          */
-        console.log("task_id: ", _id)
+        // console.log("task_id: ", _id)
         try {
             const updateResult = await tasksCollection.updateOne(
                 { _id: _id },
@@ -142,14 +152,12 @@ export default function Tasks() {
 
     useEffect(() => {
         getAllTasks()
-        setWindowHeight(window.innerHeight)
-        window.addEventListener('resize', () => {
-            setWindowHeight(window.innerHeight)
-        })
+            window.addEventListener('resize', handleSetWindowHeight)
         return () => {
-            window.removeEventListener('resize', setWindowHeight)
+            cancelGetTasks.current = true
+            window.removeEventListener('resize', handleSetWindowHeight)
         }
-    }, [])
+    }, [getAllTasks])
 
     return (
         // <section style={styles.homeSection}>

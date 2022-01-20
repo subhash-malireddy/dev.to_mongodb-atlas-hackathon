@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container, Nav, Button } from 'react-bootstrap'
 import Navbar from 'react-bootstrap/Navbar'
 import { useNavigate } from 'react-router-dom';
@@ -9,16 +9,18 @@ import '../styles/general.scss'
 
 function AppNav() {
     const app = new Realm.App({ id: process.env.REACT_APP_REALM_APP_ID })
+    const [currentUser, setCurrentUser] = useState(app.currentUser)
     let navigate = useNavigate()
     const logout = async () => {
         await app.currentUser.logOut()
+        setCurrentUser(app.currentUser)
         navigate('/')
     }
     useEffect(() => {
-        if(app.currentUser){
+        if(currentUser){
             navigate('/tasks')
         }
-    },[])
+    },[currentUser, navigate])
     return (
         <div>
             <Navbar bg="dark" className="nav-brand">
