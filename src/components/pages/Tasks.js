@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef} from 'react'
 import TaskList from '../TaskList';
 import '../../styles/home.scss'
 import Button from 'react-bootstrap/Button'
@@ -18,14 +18,12 @@ export default function Tasks() {
     const handleClose = () => setShowModal(false);
     const handleShow = () => { setShowModal(true) };
 
-    let cancelGetTasks = useRef(false)
-
-    let getTasksCount = useRef(0)
+    const [taskRelatedUpdate, setTaskRelatedUpdate] = useState("") //this tells what kind of update happended to component that is related to tasks. completed, deleted, created, or getTasks
 
     const app = new Realm.App({ id: process.env.REACT_APP_REALM_APP_ID })
     const mongodb = app.currentUser.mongoClient('mongodb-atlas')
 
-    const tasksCollection = mongodb.db('simple-task-reminder').collection('tasks')
+    const tasksCollection = useRef(mongodb.db('simple-task-reminder').collection('tasks'))
 
     //tasks crud
     const createTask = async (e) => {
@@ -41,7 +39,7 @@ export default function Tasks() {
         newTask["task_status"] = "incomplete"
         // console.log(newTask)
         try {
-            const insertResult = await tasksCollection.insertOne(newTask)
+            const insertResult = await tasksCollection.current.insertOne(newTask)
             newTask["_id"] = insertResult.insertedId 
             tasks.push(newTask)
             createTaskForm.current.reset()
@@ -55,14 +53,17 @@ export default function Tasks() {
         }
     }
 
-    const getAllTasks = useCallback(async () => {
-        if(!cancelGetTasks.current){
-            getTasksCount.current++
-            setTasks(await tasksCollection.find({ task_status: "incomplete" }))
-        }
-    },[tasksCollection])
+    // const getAllTasks = useCallback(async () => {
+    //     console.log('getting tasks')
+    //     if(!cancelGetTasks.current){
+    //         console.log('getting tasks2')
+    //         getTasksCount.current++
+    //         setTasks(await tasksCollection.find({ task_status: "incomplete" }))
+    //     }
+    // },[tasksCollection])
 
     const handleSetWindowHeight = () => {
+        console.log('setting window height')
         setWindowHeight(window.innerHeight)
     }
 
@@ -74,7 +75,7 @@ export default function Tasks() {
          */
         // console.log("task_id: ", _id)
         try {
-            const updateResult = await tasksCollection.updateOne(
+            const updateResult = await tasksCollection.current.updateOne(
                 { _id: _id },
                 { $set: { task_status: "complete" } }
             )
@@ -83,7 +84,8 @@ export default function Tasks() {
             } else {
                 alert("There's a problem updating the task, please try again. Make sure you are logged in!")
             }
-            getAllTasks()
+            // getAllTasks()
+            setTaskRelatedUpdate("completed")
         } catch (e) {
             alert(String(e))
         }
@@ -95,7 +97,7 @@ export default function Tasks() {
         */
         alert("Are you sure you want to delete this task?")
         try {
-            const deleteResult = await tasksCollection.deleteOne(
+            const deleteResult = await tasksCollection.current.deleteOne(
                 { _id: _id }
             )
             if (deleteResult.deletedCount === 1) {
@@ -103,7 +105,8 @@ export default function Tasks() {
             } else {
                 alert("There's a problem deleting the task, please try again. Make sure you are logged in!")
             }
-            getAllTasks()
+            // getAllTasks()
+            setTaskRelatedUpdate("deleted")
         } catch (e) {
             alert(e)
         }
@@ -151,18 +154,26 @@ export default function Tasks() {
     }
 
     useEffect(() => {
-        getAllTasks()
+        console.log('useEffect running')
+        const getAllTasks = async () => {
+                if(taskRelatedUpdate !== "getTasks"){
+                    try{
+                        setTasks(await tasksCollection.current.find({ task_status: "incomplete" }))
+                        setTaskRelatedUpdate("getTasks")
+                    }catch(e){
+                        console.warn(e)
+                    }
+                }
+            }
+            getAllTasks()
             window.addEventListener('resize', handleSetWindowHeight)
         return () => {
-            cancelGetTasks.current = true
             window.removeEventListener('resize', handleSetWindowHeight)
+            console.log('event removed')
         }
-    }, [getAllTasks])
+    }, [taskRelatedUpdate])
 
     return (
-        // <section style={styles.homeSection}>
-        //     <Button className="my-btn" onClick={handleButtonClick}>Create A New Task List!</Button>
-        // </section>
         <div className="container">
             <div className="gap-2 d-md-flex justify-content-md-end" style={{ marginTop: "1rem", marginBottom: "1rem" }}>
                 <Button variant="success" onClick={handleShow}>Create A New Task</Button>

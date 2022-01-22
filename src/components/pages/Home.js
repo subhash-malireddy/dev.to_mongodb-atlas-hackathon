@@ -22,6 +22,9 @@ function Home() {
 
     let navigate = useNavigate()
 
+    const handleWindowResize = () => {
+        setWindowHeight(window.innerHeight)
+    }
 
     const styles = {
         homeSection: {
@@ -33,11 +36,13 @@ function Home() {
     }
     const toggleFormType = (e) => {
         if(formType === 'signin'){
-            setFormType('signup')
             setEmail('')
             setPassword('')
-    }
+            setFormType('signup')
+        }
         else{
+            setEmail('')
+            setPassword('')
             setFormType('signin')    
         }
     }
@@ -59,6 +64,7 @@ function Home() {
             console.log(`email: ${email}, password: ${password}`)
             const userRegisterResult = await app.emailPasswordAuth.registerUser({ email, password });
             console.log(userRegisterResult)
+            setFormType("signin")
         }
     }
 
@@ -91,12 +97,10 @@ function Home() {
     useEffect(() => {
 
         setWindowHeight(window.innerHeight)
-        window.addEventListener('resize', () => {
-            setWindowHeight(window.innerHeight)
-        })
+        window.addEventListener('resize', handleWindowResize)
 
         return () => {
-            window.removeEventListener('resize', setWindowHeight)
+            window.removeEventListener('resize', handleWindowResize)
         }
     }, [])
 
