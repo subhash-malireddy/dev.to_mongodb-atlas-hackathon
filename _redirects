@@ -1,4 +1,0 @@
-https://dev2hack-simple-reminder.netlify.app/tasks          /tasks
-https://dev2hack-simple-reminder.netlify.app/confirmEmail token=:token tokenId=:tokenId   /confirmEmail/:token/:tokenId 301
-https://dev2hack-simple-reminder.netlify.app//resetPassword token=:token tokenId=:tokenId /resetPassword/:token/:tokenId 301
-https://dev2hack-simple-reminder.netlify.app/forgotPassword /forgotPassword
