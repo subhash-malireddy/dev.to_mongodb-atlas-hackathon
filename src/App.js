@@ -25,7 +25,7 @@ function App() {
         <Route exact path="/" element={<Home />} />
         <Route path="/tasks" element={<Tasks />} />
         <Route path="/confirmEmail" element={<ConfirmEmail />} />
-        <Route exact path="/resetPassword" element={<ResetPassword />} />
+        <Route path="/resetPassword" element={<ResetPassword />} />
         <Route exact path="/forgotPassword" element={<ForgotPassword />} />
       </Routes>
     </Router>
