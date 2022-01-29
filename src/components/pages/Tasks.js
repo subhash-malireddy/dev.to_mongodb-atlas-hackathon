@@ -53,15 +53,6 @@ export default function Tasks() {
         }
     }
 
-    // const getAllTasks = useCallback(async () => {
-    //     console.log('getting tasks')
-    //     if(!cancelGetTasks.current){
-    //         console.log('getting tasks2')
-    //         getTasksCount.current++
-    //         setTasks(await tasksCollection.find({ task_status: "incomplete" }))
-    //     }
-    // },[tasksCollection])
-
     const handleSetWindowHeight = () => {
         console.log('setting window height')
         setWindowHeight(window.innerHeight)
@@ -84,7 +75,6 @@ export default function Tasks() {
             } else {
                 alert("There's a problem updating the task, please try again. Make sure you are logged in!")
             }
-            // getAllTasks()
             setTaskRelatedUpdate("completed")
         } catch (e) {
             alert(String(e))
@@ -95,20 +85,22 @@ export default function Tasks() {
        you can modify the local tasks array to reflect the changes and choose not to send another request to db. But for simplicity I'll call the getAllTasks to rereender the component with new set of tasks.
        In this function I'll send an delete request and once the task is deleted, I'll send a get request to get a new set of updated tasks from db.
         */
-        alert("Are you sure you want to delete this task?")
-        try {
-            const deleteResult = await tasksCollection.current.deleteOne(
-                { _id: _id }
-            )
-            if (deleteResult.deletedCount === 1) {
-                alert("Task deleted Successfully")
-            } else {
-                alert("There's a problem deleting the task, please try again. Make sure you are logged in!")
+        if(window.confirm("Are you sure you want to delete this task?")){
+            try {
+                const deleteResult = await tasksCollection.current.deleteOne(
+                    { _id: _id }
+                )
+                if (deleteResult.deletedCount === 1) {
+                    setTaskRelatedUpdate("deleted")
+                    alert("Task deleted Successfully")
+                } else {
+                    alert("There's a problem deleting the task, please try again. Make sure you are logged in!")
+                }
+            } catch (e) {
+                alert(e)
             }
-            // getAllTasks()
-            setTaskRelatedUpdate("deleted")
-        } catch (e) {
-            alert(e)
+        }else{
+            alert('You cancelled deleting the task')
         }
     }
 
