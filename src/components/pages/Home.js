@@ -47,11 +47,15 @@ function Home() {
         if (formType === 'signin') {
             setEmail('')
             setPassword('')
+            setEmailTouched(false)
+            setPasswordTouched(false)
             setFormType('signup')
         }
         else {
             setEmail('')
             setPassword('')
+            setEmailTouched(false)
+            setPasswordTouched(false)
             setFormType('signin')
         }
     }
