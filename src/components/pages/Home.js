@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Form } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import Spinner from 'react-bootstrap/Spinner'
 import { InfoCircle } from 'react-bootstrap-icons';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -20,12 +21,14 @@ function Home() {
     const [emailTouched, setEmailTouched] = useState(false)
     const [passwordTouched, setPasswordTouched] = useState(false)
     const [password, setPassword] = useState('')
+    const [registeringUser, setregisteringUser] = useState(false)
+    const [newUserRegistered, setNewUserRegistered] = useState(false)
 
     //user acknowledgement model
     const [show, setShow] = useState(false);
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleClose = () => { setuserAcknowledgement(false); setShow(false)}
+    const handleShow = () => setShow(true)
 
     const [userAcknowledgement, setuserAcknowledgement] = useState(false)
 
@@ -81,11 +84,16 @@ function Home() {
             console.log('signing up')
             console.log(`email: ${email}, password: ${password}`)
             try {
+                setregisteringUser(true)
+                setNewUserRegistered(false)
                 await app.emailPasswordAuth.registerUser({ email, password })
+                setregisteringUser(false)
+                setNewUserRegistered(true)
                 handleShow()
                 setFormType("signin")
             } catch (e) {
                 alert(String(e))
+                setNewUserRegistered(false)
             }
         }
     }
@@ -123,12 +131,13 @@ function Home() {
 
         return () => {
             window.removeEventListener('resize', handleWindowResize)
+            setNewUserRegistered(false)
         }
     }, [])
 
     return (
         <div style={styles.homeSection}>
-            <p style={{backgroundColor: 'yellow', display: userAcknowledgement? "block": "none"}}>
+            <p style={{backgroundColor: 'yellow', display: newUserRegistered? "block": "none"}}>
             {/* <img src="../../assets/images/icons/info-circle.svg" alt="Bootstrap" width="32" height="32" /> */}
             <InfoCircle height="32" width="32"/>
                 {/* <i className="bi bi-info-circle"></i>*/}
@@ -155,10 +164,13 @@ function Home() {
                         </Form.Text>
                     }
                 </Form.Group>
-                <Button variant="primary" onClick={handleSignupSignin} disabled={!emailValidation() || !passwordValidation()}>
+                <Button variant="primary" onClick={handleSignupSignin} disabled={!emailValidation() || !passwordValidation() || registeringUser}>
                     {
-                        formType === 'signin' ? 'Sign In' : 'Sign Up'
+                        formType === 'signin' ? 'Sign In' : `Sign Up`
                     }
+                    <span style={{display: formType==='signup' && registeringUser ? 'inline-block' : 'none', marginLeft: '1rem'}}>
+                        <Spinner size="sm" animation="grow"/>
+                    </span>
                 </Button>
             </Form>
             <strong className='sign-up-in-link' onClick={toggleFormType}>
