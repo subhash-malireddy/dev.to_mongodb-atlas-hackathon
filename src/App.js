@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import './styles/home.scss'
 import './styles/general.scss'
 import './styles/tasks.scss'
 
